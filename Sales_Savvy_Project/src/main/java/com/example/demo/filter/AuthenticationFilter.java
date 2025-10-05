@@ -36,7 +36,8 @@ public class AuthenticationFilter implements Filter{
 	
 	private static final String[] UNAUTHENTICATED_PATHS = {
 			"/api/users/register",
-			"/api/auth/login"
+			"/api/auth/login",
+			"/api/auth/logout"  
 	};
 	
 	
@@ -62,64 +63,61 @@ public class AuthenticationFilter implements Filter{
 		
 	}
 	
-	private void executeFilterLogic(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		HttpServletResponse httResponse = (HttpServletResponse) response;
-		
-		String requestURI = httpRequest.getRequestURI();
-		logger.info("Request URI: {}", requestURI);
-		
-		// Allow unauthenticated paths
-		if (Arrays.asList(UNAUTHENTICATED_PATHS).contains(requestURI)) {
-		chain.doFilter(request, response);
-		return;
-		}
-		
-		// Handle preflight (OPTIONS) requests
-		if (httpRequest.getMethod().equalsIgnoreCase("OPTIONS")) {
-		setCORSHeaders(httResponse);
-		return;
-		}
-		
-		
-		// Extract and validate the token
-		String token = getAuthTokenFromCookies(httpRequest);
-		System.out.println(token);
-		if (token == null || !authService.validateToken(token)) {
-		sendErrorResponse(httResponse, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: Invalid or missing token");
-		return;
-		}
-		
-		
-		// Extract username and verify user
-		String username = authService.extractUsername(token);
-		Optional<User> userOptional = userrepo.findByUsername(username);
-		if (userOptional.isEmpty()) {
-		sendErrorResponse(httResponse, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: User not found");
-		return;
-		}
-		
-		// Get authenticated user and role
-		User authenticatedUser = userOptional.get();
-		Role role = authenticatedUser.getRole();
-		logger.info("Authenticated User: {}, Role: {}", authenticatedUser.getUsername(), role);
-		
-		
-		// Role-based access control
-		if (requestURI.startsWith("/admin/") && role != Role.ADMIN) {
-		sendErrorResponse(httResponse, HttpServletResponse.SC_FORBIDDEN, "Forbidden: Admin access required");
-		return;
-		}
-		
-		if (requestURI.startsWith("/api/") && role != Role.CUSTOMER) {
-		sendErrorResponse(httResponse, HttpServletResponse.SC_FORBIDDEN, "Forbidden: Customer access required");
-		return;
-		}
-		
-		// Attach user details to request
-		httpRequest.setAttribute("authenticatedUser", authenticatedUser);
-		chain.doFilter(request, response);
-		}
+	private void executeFilterLogic(ServletRequest request, ServletResponse response, FilterChain chain) 
+	        throws IOException, ServletException {
+	    HttpServletRequest httpRequest = (HttpServletRequest) request;
+	    HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+	    // Always set CORS headers
+	    setCORSHeaders(httpResponse);
+
+	    String requestURI = httpRequest.getRequestURI();
+	    logger.info("Request URI: {}", requestURI);
+
+	    // Allow unauthenticated paths
+	    if (Arrays.asList(UNAUTHENTICATED_PATHS).contains(requestURI)) {
+	        chain.doFilter(request, response);
+	        return;
+	    }
+
+	    // Handle preflight (OPTIONS) requests
+	    if (httpRequest.getMethod().equalsIgnoreCase("OPTIONS")) {
+	        return; // headers already set, just return OK
+	    }
+
+	    // Extract and validate the token
+	    String token = getAuthTokenFromCookies(httpRequest);
+	    if (token == null || !authService.validateToken(token)) {
+	        sendErrorResponse(httpResponse, HttpServletResponse.SC_UNAUTHORIZED,
+	                "Unauthorized: Invalid or missing token");
+	        return;
+	    }
+
+	    // Extract username and verify user
+	    String username = authService.extractUsername(token);
+	    Optional<User> userOptional = userrepo.findByUsername(username);
+	    if (userOptional.isEmpty()) {
+	        sendErrorResponse(httpResponse, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: User not found");
+	        return;
+	    }
+
+	    // Role-based checks
+	    User authenticatedUser = userOptional.get();
+	    Role role = authenticatedUser.getRole();
+	    if (requestURI.startsWith("/admin/") && role != Role.ADMIN) {
+	        sendErrorResponse(httpResponse, HttpServletResponse.SC_FORBIDDEN, "Forbidden: Admin access required");
+	        return;
+	    }
+	    if (requestURI.startsWith("/api/") && role != Role.CUSTOMER) {
+	        sendErrorResponse(httpResponse, HttpServletResponse.SC_FORBIDDEN, "Forbidden: Customer access required");
+	        return;
+	    }
+
+	    // Attach user details to request
+	    httpRequest.setAttribute("authenticatedUser", authenticatedUser);
+	    chain.doFilter(request, response);
+	}
+
 	
 		private void setCORSHeaders(HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", ALLOWED_ORIGIN);

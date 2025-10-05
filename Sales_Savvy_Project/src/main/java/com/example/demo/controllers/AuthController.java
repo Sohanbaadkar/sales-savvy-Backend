@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,30 +63,30 @@ public class AuthController {
 	
 	@PostMapping("/logout")
 	public ResponseEntity<Map<String, String>> logout(HttpServletRequest request, HttpServletResponse response) {
-		try {
-			// Retrieve authenticated user from the request
-			User user = (User) request.getAttribute("authenticatedUser");
-			
-			// Delegate logout operation to the service layer
-			authservice.logout(user);
-			
-			// Clear the authentication token cookie
-			Cookie cookie = new Cookie("authToken", null);
-			cookie.setHttpOnly(true);
-			cookie.setMaxAge(0);
-			cookie.setPath("/");
-			response.addCookie(cookie);
-			
-			// Success response
-			Map<String, String> responseBody = new HashMap<>();
-			responseBody.put("message", "Logout successful");
-			return ResponseEntity.ok(responseBody);
-		} catch (RuntimeException e) {
-			
-			// Error response
-			Map<String, String> errorResponse = new HashMap<>();
-			errorResponse.put("message", "Logout failed");
-			return ResponseEntity.status(500).body(errorResponse);
-		}
+	    // Clear the authentication token cookie
+	    Cookie cookie = new Cookie("authToken", null);
+	    cookie.setHttpOnly(true);
+	    cookie.setSecure(false); // true in production with HTTPS
+	    cookie.setMaxAge(0);
+	    cookie.setPath("/");
+	    response.addCookie(cookie);
+
+	    // Optional: invalidate the token on server side
+	    String token = null;
+	    if (request.getCookies() != null) {
+	        token = Arrays.stream(request.getCookies())
+	                      .filter(c -> "authToken".equals(c.getName()))
+	                      .map(Cookie::getValue)
+	                      .findFirst()
+	                      .orElse(null);
+	    }
+	    if (token != null) {
+	        authservice.logout(token); // overload your service to accept token instead of user
+	    }
+
+	    Map<String, String> responseBody = new HashMap<>();
+	    responseBody.put("message", "Logout successful");
+	    return ResponseEntity.ok(responseBody);
 	}
+
 }

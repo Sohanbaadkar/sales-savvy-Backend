@@ -3,7 +3,6 @@ version: "3.9"
 services:
   
   # MySQL database
-  
   db:
     image: mysql:8.0
     container_name: salessavvy-mysql
@@ -21,9 +20,7 @@ services:
       retries: 5
     restart: unless-stopped
 
- 
   # Spring-Boot application
-
   app:
     build: .
     container_name: salessavvy-backend
@@ -37,17 +34,23 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/sales_savvy_project
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: "sohan546"
-      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
 
       # JWT & payment keys (use secrets in real prod)
       JWT_SECRET: your-very-long-secure-secret-key-for-production-12345678901234567890
       JWT_EXPIRATION: "3600000"
       RAZORPAY_KEY_ID: rzp_test_RICAxWpUhTcaF3
       RAZORPAY_KEY_SECRET: sn11wDgxWINKMl0MOQ084Bsa
+    restart: unless-stopped
 
-    volumes:
-      # Mount the same properties file so you can tweak it without rebuilding
-      - ./src/main/resources/application.properties:/app/config/application.properties
+  # Frontend application
+  frontend:
+    build: C:\Users\sohan\OneDrive\Desktop\SalesSavvy\salessavvy
+    container_name: salessavvy-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - app
     restart: unless-stopped
 
 volumes:
