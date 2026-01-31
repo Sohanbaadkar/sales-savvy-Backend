@@ -68,7 +68,7 @@ public class AuthenticationFilter implements Filter{
 	    HttpServletRequest httpRequest = (HttpServletRequest) request;
 	    HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-	    // Always set CORS headers
+	    //  set CORS headers
 	    setCORSHeaders(httpResponse);
 
 	    String requestURI = httpRequest.getRequestURI();
