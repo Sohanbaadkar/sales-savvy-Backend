@@ -1,155 +1,173 @@
-🛍️ SalesSavvy Backend
-A full-featured, robust, and secure RESTful service for an e-commerce platform built with Spring Boot and Java 17.
+# 🛍️ SalesSavvy Backend
 
-SalesSavvy is designed to efficiently manage inventory, process orders, handle customer data, and secure transactions, featuring JWT-based authentication and role-based access control.
+A full-featured and secure **RESTful backend service for an e-commerce platform** built using **Java 17 and Spring Boot**.
 
-✨ Features
-Admin Features
-Management: Manage products, categories, users, orders, and product images.
+SalesSavvy enables businesses to efficiently manage **inventory, customers, orders, and payments** while ensuring secure access through **JWT authentication and role-based access control (RBAC)**.
 
-Reporting: Generate detailed business reports (daily, monthly, yearly, overall).
+---
 
-Search & Filter: Advanced filtering and searching for orders, products, and users.
+## ✨ Features
 
-Security: Role-based access control secured by JWT authentication.
+## 🔧 Admin Features
 
-Customer Features
-Browsing: Browse all products with optional filtering by category.
+- Manage **products, categories, users, and orders**
+- Upload and manage **product images**
+- Generate **business reports** (daily, monthly, yearly, overall)
+- Advanced **search and filtering**
+- **Role-based access control** for admin operations
 
-Cart Management: Add, update, or remove items in the shopping cart.
+## 🛒 Customer Features
 
-Order Processing: Place orders and view detailed order history.
+- Browse products and **filter by category**
+- Add/remove items in **shopping cart**
+- Place orders and view **order history**
+- Secure **payment integration using Razorpay (Test Mode)**
+- Manage **user profile**
+- Secure endpoints with **JWT authentication**
 
-Payments: Secure payment processing via Razorpay (Test Mode).
+---
 
-Authentication: JWT token authentication for all secure endpoints.
+## 🔐 Security & Authentication
 
-Profile: View and manage personal profile information.
+- **JWT tokens** generated during login
+- Tokens stored securely in **HttpOnly cookies**
+- **Role-based authorization (Admin / Customer)**
+- Request filtering through **JWT authentication filters**
 
-Security & Authentication
-JWT Tokens: Issued upon login and stored securely in HttpOnly cookies.
+---
 
-Access Control: Every request is authenticated and authorized based on user roles (Customer/Admin).
+## 💻 Tech Stack
 
-💻 Tech Stack
-Technology	Version	Purpose
-Java	17	Core programming language.
-Spring Boot	Latest	Framework for building the REST API.
-MySQL	8.0	Primary data store.
-JWT		Token-based authentication and authorization.
-Razorpay		Payment gateway integration (Test Mode).
-Docker & Docker Compose		Containerization and easy deployment.
-Maven		Dependency management and build tool.
+| Technology | Purpose |
+|------------|--------|
+| Java 17 | Core programming language |
+| Spring Boot | Backend REST API framework |
+| Spring Security | Authentication and authorization |
+| Spring Data JPA | Database ORM |
+| MySQL | Primary database |
+| JWT (JJWT) | Token-based authentication |
+| Razorpay | Payment gateway integration |
+| Docker | Containerization |
+| Maven | Dependency management |
 
-Export to Sheets
-🚀 Setup & Installation (Recommended)
-The entire application, including the MySQL database, is fully dockerized for immediate setup.
+---
 
-Prerequisites
-Docker and Docker Compose installed.
+## 🚀 Setup & Installation (Docker Recommended)
 
-Steps
-Clone the Repository:
+The entire application and database are containerized using **Docker Compose**.
 
-Bash
+## Prerequisites
 
+- Docker
+- Docker Compose
+
+## Steps
+
+
+
+### Clone the repository
+
+```bash
 git clone https://github.com/your-username/sales-savvy-backend.git
 cd sales-savvy-backend
-Build and Run Containers:
-This command will build the Spring Boot application, set up the MySQL database, and start both services.
+```
 
-Bash
+### Build and run containers
 
+```bash
 docker-compose up --build
-Access Points
-Service	Access URL	Credentials
-Backend API	http://localhost:8080	Requires Registration/Login
-MySQL Database	localhost:3306	User: root, Password: SQL Password
+```
 
-Export to Sheets
-Database Details
-Schema: Ecommerce
+## 📍 Access Points
+| Service | URL |
+|--------|-----|
+Backend API | http://localhost:8080 |
+MySQL Database | localhost:3306 |
 
-Tables: products, categories, users, orders, orderitems, productimages, jwt_tokens
+## 🗄 Database Details
 
-Stopping the Services
-To stop and remove the containers, networks, and volumes:
+Database Schema: **Ecommerce**
+Tables:
+- products
+- categories
+- users
+- orders
+- order_items
+- product_images
+- jwt_tokens
 
-Bash
+##🌐 API Endpoints
+###Authentication
+### Authentication
 
-docker-compose down
-⚙️ Running Without Docker
-If you prefer to run the backend directly on your machine:
+| Method | Endpoint | Description |
+|------|-----------|-------------|
+POST | /api/users/register | Register a new user |
+POST | /api/auth/login | Login and receive JWT token |
+POST | /api/auth/logout | Logout and clear JWT |
 
-Prerequisites
-Java 17+ installed.
-
-Maven installed.
-
-A running MySQL 8.0 instance on localhost:3306.
-
-A database named Ecommerce created in MySQL.
-
-Steps
-Start MySQL: Ensure your MySQL service is running with the specified host, port, and credentials.
-
-Bash
-
-mysql -u root -p
-# Enter SQL Password
-CREATE DATABASE Ecommerce;
-(Note: You will need to configure your application.properties or application.yml file to run on port 8080 with the correct JDBC URL and credentials if they differ from the default.)
-
-Run the Application:
-
-Bash
-
-mvn spring-boot:run
-The application will start on http://localhost:8080.
-
-🌐 API Endpoints
-All endpoints are secured and require a valid JWT token in an HttpOnly cookie, obtained via the /api/auth/login endpoint.
-
-Authentication & Core Endpoints
+Customer APIs
 Method	Endpoint	Description
-POST	/api/users/register	Register a new user
-POST	/api/auth/login	Login user, receive JWT token in cookie
-POST	/api/auth/logout	Logout user, clear JWT cookie
-GET	/api/profile/info	Get profile info for authenticated user
-
-Export to Sheets
-Customer Endpoints
-Method	Endpoint	Description
-GET	/api/products	Browse products with optional category filters
+GET	/api/products	Browse products
 POST	/api/cart/add	Add item to cart
-PUT	/api/cart/update	Update item quantity in cart
+PUT	/api/cart/update	Update cart quantity
 DELETE	/api/cart/delete	Remove item from cart
-GET	/api/cart/items	Get current cart items
-GET	/api/cart/items/count	Get total number of cart items
-POST	/api/orders	Place an order
-GET	/api/orders	Get orders for authenticated user
-POST	/api/payment/create	Create Razorpay order ID
-POST	/api/payment/verify	Verify Razorpay payment signature
+GET	/api/cart/items	Get cart items
+POST	/api/orders	Place order
+GET	/api/orders	View user orders
 
-Export to Sheets
-Admin Endpoints
+Admin APIs
 Method	Endpoint	Description
-GET	/admin/business/daily	Daily business report
-GET	/admin/business/monthly	Monthly business report
-GET	/admin/business/yearly	Yearly business report
-GET	/admin/business/overall	Overall business report
-POST	/admin/products/add	Add a new product
-DELETE	/admin/products/delete	Delete a product
+GET	/admin/business/daily	Daily report
+GET	/admin/business/monthly	Monthly report
+GET	/admin/business/yearly	Yearly report
+GET	/admin/business/overall	Overall report
+POST	/admin/products/add	Add product
+DELETE	/admin/products/delete	Delete product
 GET	/admin/users	Get all users
-PUT	/admin/user/modify	Modify user details
-POST	/admin/user/getbyid	Get user by ID
+PUT	/admin/user/modify	Modify user
 
-📁 Project Structure
-sales-savvy-backend/
+##⚙ Running Without Docker
+Prerequisites
+Java 17+
+Maven
+MySQL 8.0
+
+### Create database
+
+```sql
+CREATE DATABASE Ecommerce;
+```
+Run application
+mvn spring-boot:run
+Application will start on
+http://localhost:8080
+
+---
+
+##📁 Project Structure
+sales-savvy-backend
 │
-├── src/               # Application source code (Java/Spring)
-├── config/            # Configuration files (e.g., application.yml)
-├── Dockerfile         # Backend Dockerfile (Builds the Spring Boot JAR)
-├── docker-compose.yml # Docker configuration (Backend + MySQL)
-├── pom.xml            # Maven dependency file
-└── README.md          # Project documentation
+├── src
+│   ├── controller
+│   ├── service
+│   ├── repo
+│   ├── entity
+│   ├── config
+│   ├── jwt
+│   └── exception
+│
+├── Dockerfile
+├── docker-compose.yml
+├── pom.xml
+└── README.md
+---
+👨‍💻 Author
+
+Sohan R Baadkar
+
+GitHub
+https://github.com/Sohanbaadkar
+
+LinkedIn
+https://www.linkedin.com/in/sohan-baadkar-aa4579229/
