@@ -97,7 +97,7 @@ Tables:
 - jwt_tokens
 
 ## 🌐 API Endpoints
-###Authentication
+
 ### Authentication
 
 | Method | Endpoint | Description |
@@ -106,26 +106,30 @@ POST | /api/users/register | Register a new user |
 POST | /api/auth/login | Login and receive JWT token |
 POST | /api/auth/logout | Logout and clear JWT |
 
-Customer APIs
-Method	Endpoint	Description
-GET	/api/products	Browse products
-POST	/api/cart/add	Add item to cart
-PUT	/api/cart/update	Update cart quantity
-DELETE	/api/cart/delete	Remove item from cart
-GET	/api/cart/items	Get cart items
-POST	/api/orders	Place order
-GET	/api/orders	View user orders
+### Customer APIs
 
-Admin APIs
-Method	Endpoint	Description
-GET	/admin/business/daily	Daily report
-GET	/admin/business/monthly	Monthly report
-GET	/admin/business/yearly	Yearly report
-GET	/admin/business/overall	Overall report
-POST	/admin/products/add	Add product
-DELETE	/admin/products/delete	Delete product
-GET	/admin/users	Get all users
-PUT	/admin/user/modify	Modify user
+| Method | Endpoint | Description |
+|------|-----------|-------------|
+GET | /api/products | Browse products |
+POST | /api/cart/add | Add item to cart |
+PUT | /api/cart/update | Update cart quantity |
+DELETE | /api/cart/delete | Remove item from cart |
+GET | /api/cart/items | Get cart items |
+POST | /api/orders | Place order |
+GET | /api/orders | View user orders |
+
+### Admin APIs
+
+| Method | Endpoint | Description |
+|------|-----------|-------------|
+GET | /admin/business/daily | Daily report |
+GET | /admin/business/monthly | Monthly report |
+GET | /admin/business/yearly | Yearly report |
+GET | /admin/business/overall | Overall report |
+POST | /admin/products/add | Add product |
+DELETE | /admin/products/delete | Delete product |
+GET | /admin/users | Get all users |
+PUT | /admin/user/modify | Modify user |
 
 ## ⚙ Running Without Docker
 Prerequisites
@@ -138,14 +142,19 @@ MySQL 8.0
 ```sql
 CREATE DATABASE Ecommerce;
 ```
-Run application
+### Run application
+
+```bash
 mvn spring-boot:run
+```
 Application will start on
 http://localhost:8080
 
 ---
 
 ## 📁 Project Structure
+
+```
 sales-savvy-backend
 │
 ├── src
@@ -161,6 +170,8 @@ sales-savvy-backend
 ├── docker-compose.yml
 ├── pom.xml
 └── README.md
+```
+
 ---
 👨‍💻 Author
 
