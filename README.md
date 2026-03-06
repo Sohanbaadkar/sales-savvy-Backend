@@ -96,7 +96,7 @@ Tables:
 - product_images
 - jwt_tokens
 
-##🌐 API Endpoints
+## 🌐 API Endpoints
 ###Authentication
 ### Authentication
 
@@ -127,7 +127,7 @@ DELETE	/admin/products/delete	Delete product
 GET	/admin/users	Get all users
 PUT	/admin/user/modify	Modify user
 
-##⚙ Running Without Docker
+## ⚙ Running Without Docker
 Prerequisites
 Java 17+
 Maven
@@ -145,7 +145,7 @@ http://localhost:8080
 
 ---
 
-##📁 Project Structure
+## 📁 Project Structure
 sales-savvy-backend
 │
 ├── src
