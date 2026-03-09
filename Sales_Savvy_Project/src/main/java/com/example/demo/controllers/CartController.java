@@ -53,10 +53,16 @@ public class CartController {
 	// from belowits fetching Cart item block of code 
 	
 	@GetMapping("/items/count")
-	public ResponseEntity<Integer> getCartCount(@RequestParam String username) {
-		User user = userrepo.findByUsername(username).orElseThrow(() -> new RuntimeException("UserWith "+username+" not found!!"));
-		int count = cartService.getCartItemCount(user.getUser_id());
-		return  ResponseEntity.ok(count);
+	public ResponseEntity<Integer> getCartCount(HttpServletRequest request) {
+
+	    User user = (User) request.getAttribute("authenticatedUser");
+
+	    if (user == null) {
+	        return ResponseEntity.ok(0);
+	    }
+
+	    int count = cartService.getCartItemCount(user.getUser_id());
+	    return ResponseEntity.ok(count);
 	}
 	
 	
