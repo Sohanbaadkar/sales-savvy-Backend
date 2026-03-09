@@ -45,13 +45,13 @@ services:
 
   # Frontend application
   frontend:
-    build: C:\Users\sohan\OneDrive\Desktop\SalesSavvy\salessavvy
+    build:
+      context: ../../sales-savvy-Frontend
     container_name: salessavvy-frontend
     ports:
-      - "5173:5173"
+      - "3000:80"
     depends_on:
       - app
     restart: unless-stopped
-
 volumes:
   mysql_data:
