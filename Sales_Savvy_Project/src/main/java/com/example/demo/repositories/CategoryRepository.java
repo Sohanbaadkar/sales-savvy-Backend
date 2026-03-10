@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.entities.Category;
 
-@Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
-	Optional<Category> findByCategoryName(String categoryName);
+
+    Optional<Category> findByCategoryName(String categoryName);
+
+    Optional<Category> findByCategoryNameIgnoreCase(String categoryName);
 }

@@ -29,7 +29,7 @@ private CategoryRepository categoryRepository;
 public List<Product> getProductsByCategory(String categoryName) {
 	
 if (categoryName != null && !categoryName.isEmpty()) {
-	Optional<Category> categoryOpt = categoryRepository.findByCategoryName(categoryName);
+	Optional<Category> categoryOpt = categoryRepository.findByCategoryNameIgnoreCase(categoryName);
 	if (categoryOpt.isPresent()) {
 		Category category = categoryOpt.get();
 		return productRepository.findByCategory_CategoryId(category.getCategoryId());
